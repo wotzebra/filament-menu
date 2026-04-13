@@ -2,8 +2,12 @@
 
 namespace Wotz\FilamentMenu\Filament\Resources;
 
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns;
 use Filament\Tables\Table;
 use Wotz\FilamentMenu\Filament\Pages\MenuBuilder;
@@ -16,10 +20,10 @@ class MenuResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-bars-3';
 
-    public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
+    public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            \Filament\Schemas\Components\Grid::make(1)
+            Grid::make(1)
                 ->schema([
                     Components\TextInput::make('working_title')
                         ->label(__('filament-menu::admin.working title'))
@@ -68,12 +72,12 @@ class MenuResource extends Resource
                     ->label(__('filament-menu::admin.depth')),
             ])
             ->actions([
-                \Filament\Actions\Action::make('build-menu')
+                Action::make('build-menu')
                     ->label(__('filament-menu::admin.build menu'))
                     ->icon('heroicon-o-document-text')
                     ->url(fn (Menu $record): string => "menus/{$record->id}/builder"),
 
-                \Filament\Actions\EditAction::make(),
+                EditAction::make(),
             ]);
     }
 
