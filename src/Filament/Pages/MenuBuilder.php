@@ -8,6 +8,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Concerns;
 use Filament\Resources\Pages\Page;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -80,9 +82,9 @@ class MenuBuilder extends Page
                     ->required()
                     ->reactive(),
 
-                \Filament\Schemas\Components\Grid::make(1)
-                    ->hidden(fn (\Filament\Schemas\Components\Utilities\Get $get) => empty($get('type')))
-                    ->schema(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('type') ? $get('type')::make()->schema() : []),
+                Grid::make(1)
+                    ->hidden(fn (Get $get) => empty($get('type')))
+                    ->schema(fn (Get $get) => $get('type') ? $get('type')::make()->schema() : []),
             ])
             ->action(function (array $arguments, array $data) {
                 $menuItem = MenuItem::updateOrCreate([

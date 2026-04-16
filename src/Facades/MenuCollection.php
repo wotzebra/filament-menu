@@ -2,7 +2,9 @@
 
 namespace Wotz\FilamentMenu\Facades;
 
-class MenuCollection extends \Illuminate\Support\Facades\Facade
+use Illuminate\Support\Facades\Facade;
+
+class MenuCollection extends Facade
 {
     protected static function getFacadeAccessor()
     {

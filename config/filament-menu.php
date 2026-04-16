@@ -1,5 +1,6 @@
 <?php
 
+use Spatie\Navigation\Helpers\ActiveUrlChecker;
 use Wotz\FilamentMenu\NavigationElements;
 
 return [
@@ -7,5 +8,5 @@ return [
         'link-picker' => NavigationElements\LinkPickerElement::class,
     ],
 
-    'active-url-checker' => \Spatie\Navigation\Helpers\ActiveUrlChecker::class,
+    'active-url-checker' => ActiveUrlChecker::class,
 ];
