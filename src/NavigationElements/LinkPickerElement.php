@@ -21,7 +21,7 @@ class LinkPickerElement extends NavigationElement
 
         return view('filament-menu::components.navigation-elements.link-picker-element', [
             'active' => $active,
-            'label' => $link[app()->getLocale()]['label'] ?? '',
+            'label' => $this->title($link),
             'link' => $this->link($link),
             'children' => $data['children'] ?? [],
         ]);
@@ -29,12 +29,12 @@ class LinkPickerElement extends NavigationElement
 
     public function link(array $data): string|HtmlString
     {
-        return lroute($data[app()->getLocale()]['translated_link'] ?? $data['link'] ?? '') ?? '';
+        return lroute($this->translation($data, 'translated_link') ?? $data['link'] ?? '') ?? '';
     }
 
     public function hasTargetBlank(array $data): bool
     {
-        $link = $data[app()->getLocale()]['translated_link'] ?? $data['link'];
+        $link = $this->translation($data, 'translated_link') ?? $data['link'] ?? [];
 
         return $link['newTab'] ?? false;
     }

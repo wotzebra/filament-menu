@@ -28,19 +28,28 @@ abstract class NavigationElement
 
     public function title(array $data): string
     {
-        return $data[app()->getLocale()]['label'] ?? '';
+        return $this->translation($data, 'label') ?? '';
     }
 
     public function shown(array $data): bool
     {
-        return $data[app()->getLocale()]['online'] ?? false;
+        return (bool) $this->translation($data, 'online');
     }
 
     public function locales(array $data): array
     {
         return LocaleCollection::mapWithKeys(fn (Locale $locale) => [
-            $locale->locale() => $data[$locale->locale()]['online'] ?? false,
+            $locale->locale() => (bool) $this->translation($data, 'online', $locale->locale()),
         ])->toArray();
+    }
+
+    /**
+     * A translated value from a menu item's data, which stores translations
+     * field-first: `['label' => ['nl' => 'Home'], 'online' => ['nl' => true]]`.
+     */
+    protected function translation(array $data, string $field, ?string $locale = null): mixed
+    {
+        return $data[$field][$locale ?? app()->getLocale()] ?? null;
     }
 
     public static function make(): static

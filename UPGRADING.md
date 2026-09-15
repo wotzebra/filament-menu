@@ -1,5 +1,21 @@
 # Upgrading
 
+## From v3 to v4
+
+This release requires `wotz/filament-translatable-tabs` v3, which stores translations field-first instead of locale-first:
+
+```php
+// v3
+['nl' => ['label' => 'Home', 'online' => true]]
+
+// v4
+['label' => ['nl' => 'Home'], 'online' => ['nl' => true]]
+```
+
+- **Run `php artisan migrate`.** A migration moves the `data` of your existing menu items to the new shape. It reads the locales from the `LocaleCollection`, so register your locales before migrating, as you already do for your app.
+- **Custom navigation elements:** if an element (or its view) reads translations from `$data`, read them as `$data['label']['nl']` instead of `$data['nl']['label']`, or use `$this->translation($data, 'label')` for the current locale.
+- **Upgrade from translatable tabs v2 as well.** Follow its [upgrade guide](https://github.com/wotzebra/filament-translatable-tabs/blob/master/UPGRADING.md) for the rest of your app.
+
 ## From v2 to v3
 
 - Install `wotz/filament-menu` instead of `codedor/filament-menu`
