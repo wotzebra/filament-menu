@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\EloquentSortable\SortableTrait;
 use Wotz\FilamentMenu\NavigationElements\NavigationElement;
+use Wotz\LocaleCollection\Facades\LocaleCollection;
+use Wotz\LocaleCollection\Locale;
 
 /**
  * @property string $working_title
@@ -73,5 +75,40 @@ class MenuItem extends Model
     public function onlineValues(): array
     {
         return (new $this->type)->locales($this->data);
+    }
+
+    /**
+     * Menu item data stores translations locale-first (`nl.label`), which is
+     * what the navigation elements read. wotz/filament-translatable-tabs v3
+     * dehydrates them field-first (`label.nl`), so move every value keyed by
+     * locales back under its locale. Locale-first data is returned unchanged.
+     */
+    public static function localeFirst(array $data): array
+    {
+        $locales = LocaleCollection::map(fn (Locale $locale) => $locale->locale())
+            // Every element has a per-locale online flag, so its keys name the
+            // locales even when the LocaleCollection is not filled yet.
+            ->merge(is_array($data['online'] ?? null) ? array_keys($data['online']) : [])
+            ->unique()
+            ->all();
+
+        foreach ($data as $field => $translations) {
+            if (
+                in_array($field, $locales, true)
+                || ! is_array($translations)
+                || $translations === []
+                || array_diff(array_keys($translations), $locales) !== []
+            ) {
+                continue;
+            }
+
+            foreach ($translations as $locale => $value) {
+                $data[$locale][$field] = $value;
+            }
+
+            unset($data[$field]);
+        }
+
+        return $data;
     }
 }

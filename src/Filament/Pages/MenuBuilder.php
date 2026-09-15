@@ -93,7 +93,7 @@ class MenuBuilder extends Page
                 ], [
                     'working_title' => $data['working_title'],
                     'type' => $data['type'],
-                    'data' => collect($data)->except('type', 'working_title'),
+                    'data' => MenuItem::localeFirst(Arr::except($data, ['type', 'working_title'])),
                 ]);
 
                 $title = $menuItem->wasRecentlyCreated
